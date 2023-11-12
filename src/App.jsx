@@ -1,20 +1,19 @@
 import { useState } from "react"
 import "./styles.css"
+import { NewTodoForm } from "./NewTodoForm";
+import { TodoList } from "./TodoList";
 
 export default function App(){
-  const [newItem , SetnewItem] = useState("");
-  const [todos,SetTodo] = useState([]);
+ const [todos,SetTodo] = useState([]);
 
-  function handleSubmit(e){
-    e.preventDefault();
-    SetTodo(currentTodos =>{
+  function addTodo(title){
+     SetTodo(currentTodos =>{
       return[
-        ...currentTodos, {id:crypto.randomUUID(),title : newItem,
-        completed : false}
+        ...currentTodos, {id:crypto.randomUUID(),title,completed : false}
       ]
     });
-    SetnewItem("");
   }
+
 
   function toggleTodo(id,completed){
     SetTodo(currentTodos=>{
@@ -35,37 +34,9 @@ export default function App(){
 
   return ( 
   <>
-  <form className="new-item-form" onSubmit={handleSubmit}>
-    <div className="form-row">
-      <label htmlFor="item">
-        New Item
-      </label>
-      <input 
-      value={newItem}
-      onInput={(e)=>SetnewItem(e.target.value)}
-      type="text" id="item"/>
-    </div>
-    <button className="btn">Add</button>
-  </form>
+  <NewTodoForm addTodo={addTodo}/>
   <h1 className="header">Todo List</h1>
-  <ul className="list">
-    {todos.length===0&&"No todos"}
-    {todos.map(todo=>{
-      return (
-      <li key={todo.id}>
-        <label>
-          <input 
-          type="checkbox" 
-          checked={todo.completed}
-          onChange={e=>toggleTodo(todo.id,e.target.checked)}
-          />
-          {todo.title}
-          </label>
-          <button className="btn btn-danger" onClick={()=>DeleteTodo(todo.id)}>Delete</button>
-      </li>
-    )
-    })}
-  </ul>
+  <TodoList todos={todos} toggleTodo={toggleTodo} DeleteTodo={DeleteTodo} />
  </>
   )
 }
